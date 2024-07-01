@@ -7,6 +7,10 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_pinecone import PineconeVectorStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 import os
+from langchain_community.document_loaders.csv_loader import CSVLoader
+from langchain_community.document_loaders import PyPDFLoader
+
+
 
 load_dotenv()
 
@@ -27,8 +31,15 @@ text_splitter = RecursiveCharacterTextSplitter(
 )
 
 
-loader = TextLoader('law.txt')
-docs = loader.load_and_split(text_splitter=text_splitter)
+# loader = TextLoader('law.txt')
+# datas = loader.load_and_split(text_splitter=text_splitter)
 
-docsearch = PineconeVectorStore.from_documents(docs, embeddings, index_name="law-index")
+loader = CSVLoader(file_path="lawcsv.csv",encoding='utf-8')
+datas = loader.load()
+print(datas)
+
+# loader = PyPDFLoader("married-women.pdf") 
+# pages = loader.load_and_split()
+
+docsearch = PineconeVectorStore.from_documents(datas, embeddings, index_name="law-index")
 
